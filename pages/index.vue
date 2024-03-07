@@ -115,7 +115,8 @@ const buttRun = () => {
 };
 const checkpass = async () => {
   if (pass.value.toLowerCase() == "любимая ралия") {
-    var mapUrl = "https://maps.app.goo.gl/QNjiDfn7boay7L5y5";
+    var mapUrl =
+      "https://www.google.com/maps/place/Cornpink+House+Lingerie+-+Underwear+-+bikini+(+c%E1%BB%ADa+h%C3%A0ng+n%E1%BB%99i+y+n%E1%BB%AF+)/@16.0243083,108.2254146,13z/data=!4m6!3m5!1s0x314219ac6e0dc7df:0xeb6e002ee1b75837!8m2!3d16.0459227!4d108.2479231!16s%2Fg%2F11r8vhhmrb?entry=ttu";
     await startTyping("Пароль принят, перенаправляю тебя на подарок");
     setTimeout(() => {
       window.location.href = mapUrl;
