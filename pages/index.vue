@@ -118,7 +118,7 @@ const checkpass = async () => {
     var mapUrl = "https://maps.app.goo.gl/QNjiDfn7boay7L5y5";
     await startTyping("Пароль принят, перенаправляю тебя на подарок");
     setTimeout(() => {
-      window.open(mapUrl);
+      window.location.href = mapUrl;
     }, 1000);
   } else {
     startTyping("Попробуй еще раз =)");
