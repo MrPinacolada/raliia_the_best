@@ -20,6 +20,8 @@ const nuxtConfig: NuxtConfig = {
       title: "Love you!",
       link: [],
     },
+      baseURL: '/raliia_the_best/',
+      buildAssetsDir: 'assets'
   },
 
   ssr: false,
