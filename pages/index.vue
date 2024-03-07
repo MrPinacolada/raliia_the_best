@@ -15,11 +15,7 @@
           v-if="isDogDone"
           ref="animatedText"
           class="animate__animated animate__bounceIn text"
-        >
-          Я твое любовное послание на 8 марта!!!
-          <br />
-          Введи пароль чтобы получить свой подарок
-        </div>
+        ></div>
         <Vue3Lottie
           ref="lottieAnimation"
           :animationData="AnimationDogBox"
@@ -28,6 +24,25 @@
           @onEnterFrame="checkFrame"
           @on-loop-complete="setDogLoop"
         />
+        <input
+          v-if="isInput"
+          v-model="pass"
+          class="animate__animated animate__bounceIn"
+          type="text"
+        />
+        <div v-if="isInput" class="butts animate__animated animate__bounceIn">
+          <button class="check" @click="checkpass">Проверить</button>
+          <button
+            class="check runaway"
+            :style="{
+              top: runBT > 0 ? runBT + 'px' : null,
+              left: runBL > 0 ? runBL + 'px' : null,
+            }"
+            @click="buttRun"
+          >
+            Не знаю пароль
+          </button>
+        </div>
       </div>
     </main>
     <footer>
@@ -52,12 +67,25 @@ const animatedText = ref<HTMLElement | null>(null);
 const isDogDone = ref(false);
 const trigger = ref(false);
 const frameCounter = ref(0);
+const isInput = ref(false);
+const pass = ref("");
+const runBT = ref(0);
+const runBL = ref(0);
+
 const checkFrame = () => {
   if (frameCounter.value > 200) {
     isDogDone.value = true;
     if (!trigger.value) {
-      nextTick(() => {
-        startTyping();
+      nextTick(async () => {
+        const next1 = await startTyping(
+          "Я твое любовное послание на 8 марта!!!"
+        );
+        if (next1) {
+          setTimeout(async () => {
+            await startTyping(`Введи пароль чтобы получить подарок!`);
+            isInput.value = true;
+          }, 2000);
+        }
       });
     }
     trigger.value = true;
@@ -65,28 +93,37 @@ const checkFrame = () => {
   }
   frameCounter.value++;
 };
-const startTyping = () => {
-  const textElement = animatedText.value;
-  if (textElement) {
-    const textContent = textElement.textContent?.trim();
-    if (textContent !== null) {
+const startTyping = (textToType: string) => {
+  return new Promise((resolve, reject) => {
+    const textElement = animatedText.value;
+    if (textElement && textToType) {
       textElement.textContent = "";
       let charIndex = 0;
-      const typeInterval = 50
+      const typeInterval = 50;
       function type() {
-        if (charIndex < (textContent?.length || 0)) {
-          if (textElement?.textContent !== null) {
-            textElement!.textContent += textContent?.charAt(charIndex);
-            charIndex++;
-            setTimeout(type, typeInterval);
-          }
+        if (charIndex < textToType.length) {
+          textElement.textContent += textToType.charAt(charIndex);
+          charIndex++;
+          setTimeout(type, typeInterval);
+        } else {
+          resolve(true);
         }
       }
       type();
+    } else {
+      reject();
     }
-  }
+  });
 };
 
+const buttRun = () => {
+  runBT.value = Math.floor(Math.random() * 171);
+  runBL.value = Math.floor(Math.random() * 171);
+};
+const checkpass = () => {
+  if (pass.value.toLowerCase() == "любимая ралия") {
+  }
+};
 const setDogLoop = (frame) => {
   lottieAnimation.value?.goToAndPlay(120, true);
 };
@@ -127,13 +164,39 @@ body {
           height: 180px;
           position: absolute;
         }
+        .butts {
+          display: flex;
+          width: 100%;
+          height: 40px;
+          gap: 15px;
+          margin-top: 15px;
+          .check {
+            border: none;
+            background-color: #6eb669;
+            border-radius: 12px;
+            width: 100%;
+            height: 40px;
+            color: white;
+          }
+          .runaway {
+            position: relative;
+            background-color: #3f703c;
+          }
+        }
         .text {
-          font-size: 0.7em;
+          font-size: 0.9em;
           top: -78px;
           left: -15px;
           position: absolute;
           width: 115px;
           color: #6eb669;
+        }
+        input {
+          width: 100%;
+          background: whitesmoke;
+          border: none;
+          height: 40px;
+          border-radius: 10px;
         }
       }
     }
