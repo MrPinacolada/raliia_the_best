@@ -4,7 +4,7 @@
       <Vue3Lottie :animationData="AnimationCat" :height="150" :width="'100%'" />
     </header>
     <main>
-      <div class="dogbox">
+      <div v-if="!isPassCorrect" class="dogbox">
         <img
           v-if="isDogDone"
           class="animate__animated animate__bounceIn"
@@ -45,20 +45,12 @@
         </div>
       </div>
     </main>
-    <footer>
-      <Vue3Lottie
-        :animationData="AnimationFooterCat"
-        :height="150"
-        :width="'100%'"
-      />
-    </footer>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Vue3Lottie } from "vue3-lottie";
 import AnimationCat from "../assets/AnimationCat.json";
-import AnimationFooterCat from "../assets/AnimationFooterCat.json";
 import AnimationDogBox from "../assets/AnimationDogBox.json";
 import "animate.css";
 
@@ -71,6 +63,7 @@ const isInput = ref(false);
 const pass = ref("");
 const runBT = ref(0);
 const runBL = ref(0);
+const isPassCorrect = ref(false);
 
 const checkFrame = () => {
   if (frameCounter.value > 200) {
@@ -84,7 +77,7 @@ const checkFrame = () => {
           setTimeout(async () => {
             await startTyping(`Введи пароль чтобы получить подарок!`);
             isInput.value = true;
-          }, 2000);
+          }, 1500);
         }
       });
     }
@@ -120,8 +113,15 @@ const buttRun = () => {
   runBT.value = Math.floor(Math.random() * 171);
   runBL.value = Math.floor(Math.random() * 171);
 };
-const checkpass = () => {
+const checkpass = async () => {
   if (pass.value.toLowerCase() == "любимая ралия") {
+    var mapUrl = "https://maps.app.goo.gl/QNjiDfn7boay7L5y5";
+    await startTyping("Пароль принят, перенаправляю тебя на подарок");
+    setTimeout(() => {
+      window.open(mapUrl);
+    }, 1000);
+  } else {
+    startTyping("Попробуй еще раз =)");
   }
 };
 const setDogLoop = (frame) => {
@@ -141,7 +141,8 @@ body {
   display: grid;
   justify-items: center;
   align-items: start;
-  background: transparent;
+  background: url(../assets/back.svg);
+  background-size: cover;
 }
 .page {
   &__content {
@@ -181,6 +182,7 @@ body {
           .runaway {
             position: relative;
             background-color: #3f703c;
+            z-index: 99999;
           }
         }
         .text {
@@ -207,7 +209,7 @@ body {
       animation: moveHeader 4s linear infinite;
     }
     footer {
-      position: fixed;
+      position: absolute;
       bottom: -40px;
       left: -50px;
       width: 100%;
